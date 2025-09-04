@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Chuỗi 50🔥</title>
+<style>
+  body {
+    background-color: #1e90ff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+  }
+  .title {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 2px 2px 5px black, -2px -2px 5px black;
+    margin-bottom: 20px;
+  }
+  .box {
+    background: white;
+    border: 3px solid black;
+    border-radius: 14px;
+    padding: 15px;
+    margin: 10px auto;
+    width: 95%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.4);
+    position: relative;
+  }
+  .options {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+  }
+  button {
+    padding: 10px 15px;
+    border: 2px solid black;
+    border-radius: 8px;
+    background-color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
+    font-size: 14px;
+  }
+  button:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+  }
+  button.ok-btn {
+    background-color: #28a745;
+    color: white;
+  }
+  .hidden { display: none; }
+  input[type="text"] {
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 8px;
+    width: 80%;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+  /* emoji animation */
+  .emoji-anim {
+    position: absolute;
+    font-size: 26px;
+    font-weight: bold;
+    animation: flyUp 1s forwards;
+  }
+  @keyframes flyUp {
+    0% {opacity:1; transform: translateY(0) scale(1);}
+    100% {opacity:0; transform: translateY(-60px) scale(1.6);}
+  }
+</style>
+</head>
+<body>
+
+<h2 class="title">🎉 Event Chuỗi 50🔥</h2>
+
+<!-- Câu 1 -->
+<div id="q1" class="box">
+  <h3>1: TikTok của chủ video đầu tiên vào ngày bao nhiêu?</h3>
+  <div class="options">
+    <button onclick="checkQ1('5-22')">5-22</button>
+    <button onclick="checkQ1('5-21')">5-21</button>
+  </div>
+</div>
+
+<!-- Câu 2 -->
+<div id="q2" class="box hidden">
+  <h3>2: Ai là quản trị viên nhóm Roblox?</h3>
+  <div class="options">
+    <button onclick="checkQ2('skin')">skin(sonny😼)</button>
+    <button onclick="checkQ2('chu')">Chủ</button>
+  </div>
+</div>
+
+<!-- Câu 3 -->
+<div id="q3" class="box hidden">
+  <h3>3: Ai đẹp trai nhất?</h3>
+  <div class="options">
+    <button onclick="checkQ3('an')">An</button>
+    <button onclick="checkQ3('tui')">Tui</button>
+  </div>
+</div>
+
+<!-- Câu 4 -->
+<div id="q4" class="box hidden">
+  <h3>4: Ngày sinh tháng sinh viết tắt của chủ là gì?</h3>
+  <input type="text" id="birth" placeholder="vd 1 tháng 1 = 11">
+  <br>
+  <button class="ok-btn" onclick="checkQ4()">OK</button>
+</div>
+
+<!-- Bảng thưởng -->
+<div id="reward" class="box hidden">
+  <h3>🎁 Bảng Thưởng</h3>
+  <p>🏆 Nhanh nhất: 30 RB</p>
+  <p>🥈 Nhanh 2: 20 RB</p>
+  <p>🥉 Nhanh 3: 18 RB</p>
+  <p>⚡ Nhanh 4: 10 RB</p>
+  <button class="ok-btn" onclick="openGroup()">OK</button>
+</div>
+
+<!-- Cách nhận -->
+<div id="group" class="box hidden">
+  <h3>📌 Cách nhận vào nhóm TikTok Roblox</h3>
+  <p>👉 Nhắn theo số của từng người trong nhóm Roblox:</p>
+  <p>Sonny → 1234</p>
+  <p>Nạc → 6767</p>
+  <p>hochayhoi → 8787</p>
+  <p>Thinh 🐹 → 3344</p>
+</div>
+
+<!-- GUI khóa -->
+<div id="lockedBox" class="box hidden">
+  <h3>⏳ Bạn đã chọn sai!</h3>
+  <p>Bạn bị khóa trả lời trong 3 phút.</p>
+  <button class="ok-btn" onclick="closeLocked()">OK</button>
+</div>
+
+<script>
+  let locked = false;
+  let lockTimer;
+
+  // hiện nhiều emoji bay lên
+  function showEmojis(el, type) {
+    for (let i=0; i<20; i++) {
+      let span = document.createElement("span");
+      span.innerText = type==="wrong" ? "❌" : "✅";
+      span.className = "emoji-anim";
+      span.style.top = (30+Math.random()*50) + "px";
+      span.style.left = (50+Math.random()*200) + "px";
+      el.appendChild(span);
+      setTimeout(()=>span.remove(),1000);
+    }
+  }
+
+  function lock3Min() {
+    locked = true;
+    document.getElementById("lockedBox").classList.remove("hidden");
+    lockTimer = setTimeout(()=>{ locked=false; }, 180000);
+  }
+
+  function closeLocked(){
+    document.getElementById("lockedBox").classList.add("hidden");
+  }
+
+  function nextWithDelay(currentId, nextId) {
+    let box = document.getElementById(currentId);
+    showEmojis(box,"correct");
+    setTimeout(()=>{
+      box.classList.add("hidden");
+      document.getElementById(nextId).classList.remove("hidden");
+    },1000); // chờ animation 1s
+  }
+
+  function checkQ1(ans) {
+    if (locked) return;
+    if (ans === "5-21") { // đúng ở nút 2
+      nextWithDelay("q1","q2");
+    } else {
+      showEmojis(document.getElementById("q1"),"wrong");
+      lock3Min();
+    }
+  }
+
+  function checkQ2(ans) {
+    if (locked) return;
+    if (ans === "skin") { // đúng ở nút 1
+      nextWithDelay("q2","q3");
+    } else {
+      showEmojis(document.getElementById("q2"),"wrong");
+      lock3Min();
+    }
+  }
+
+  function checkQ3(ans) {
+    if (locked) return;
+    if (ans === "an") { // đúng là An
+      nextWithDelay("q3","q4");
+    } else {
+      showEmojis(document.getElementById("q3"),"wrong");
+      lock3Min();
+    }
+  }
+
+  function checkQ4() {
+    if (locked) return;
+    let val = document.getElementById("birth").value.trim();
+    if (val === "17") {
+      nextWithDelay("q4","reward");
+    } else {
+      showEmojis(document.getElementById("q4"),"wrong");
+      lock3Min();
+    }
+  }
+
+  function openGroup() {
+    document.getElementById("reward").classList.add("hidden");
+    document.getElementById("group").classList.remove("hidden");
+  }
+</script>
+</body>
+  </html>
